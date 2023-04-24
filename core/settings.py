@@ -1,5 +1,7 @@
+import os
 from pathlib import Path
 from dotenv import dotenv_values
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -7,7 +9,7 @@ config = dotenv_values(".env")
 
 SECRET_KEY = config.get("SECRET_KEY")
 DEBUG = config.get("DEBUG")
-ALLOWED_HOSTS = config.get("ALLOWED_HOSTS", [])
+ALLOWED_HOSTS = ["*"]
 
 
 INSTALLED_APPS = [
@@ -17,6 +19,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "api",
 ]
 
 MIDDLEWARE = [
@@ -53,7 +57,16 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {"default": config.get("DATABASE_URL")}
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config.get("DB_NAME"),
+        "USER": config.get("DB_USER"),
+        "PASSWORD": config.get("DB_PASSWORD"),
+        "HOST": config.get("DB_HOST"),
+        "PORT": config.get("DB_PORT"),
+    }
+}
 
 
 # Password validation
@@ -96,3 +109,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+OPEN_AI_KEY = config.get("OPEN_AI_KEY")
+os.environ["OPENAI_API_KEY"] = OPEN_AI_KEY
