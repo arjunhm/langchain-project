@@ -39,15 +39,12 @@ class LinkedInPostAPI(views.APIView):
             topic=topic, content=text_response, image_url=image_url
         )
 
-        # TODO Create LinkedInPost
+        # * Create LinkedInPost
         linkedin_response = linkedin_api.create_linkedin_post(post)
 
+        serializer = self.serializer_class(post)
         return Response(
-            {
-                "text": text_response,
-                "image_url": image_url,
-                "post_id": post.id,
-            },
+            {"post": serializer.data},
             status=status.HTTP_201_CREATED,
         )
 
